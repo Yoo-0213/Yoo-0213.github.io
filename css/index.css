@@ -2018,8 +2018,8 @@ figure.highlight pre .javascript .function {
 }
 .container pre,
 .container code {
-  font-size: 12px;
-  font-family: FiraCode !important;
+  font-size: 13px;
+  font-family: consolas, Menlo, monospace, 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
   border-radius: 6px;
 }
 .container code {
@@ -2048,7 +2048,7 @@ figure.highlight pre .javascript .function {
 .container figure.highlight figcaption,
 .container figure.highlight .caption {
   padding: 6px 0 2px 14px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1em;
 }
 .container figure.highlight figcaption a,
@@ -2097,7 +2097,7 @@ figure.highlight pre .javascript .function {
   height: 2.15em;
   background: var(--hltools-bg);
   color: var(--hltools-color);
-  font-size: 12px;
+  font-size: 13px;
   margin-right: auto;
 }
 .container .highlight-tools > * {
