@@ -1,0 +1,323 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>winki's Blog | winki's Blog</title><meta name="author" content="winki"><meta name="copyright" content="winki"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="配置代码  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010">
+<meta property="og:type" content="article">
+<meta property="og:title" content="winki&#39;s Blog">
+<meta property="og:url" content="https://yoo-0213.github.io/2025/12/05/%E5%B7%A5%E5%85%B7/Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="winki&#39;s Blog">
+<meta property="og:description" content="配置代码  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yoo-0213.github.io/Image/upload/avatar.jpg">
+<meta property="article:published_time" content="2025-12-05T12:35:19.000Z">
+<meta property="article:modified_time" content="2026-07-10T00:42:22.033Z">
+<meta property="article:author" content="winki">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yoo-0213.github.io/Image/upload/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "",
+  "url": "https://yoo-0213.github.io/2025/12/05/%E5%B7%A5%E5%85%B7/Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE/",
+  "image": "https://yoo-0213.github.io/Image/upload/avatar.jpg",
+  "datePublished": "2025-12-05T12:35:19.000Z",
+  "dateModified": "2026-07-10T00:42:22.033Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "winki",
+      "url": "https://yoo-0213.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/Image/upload/avatar.jpg"><link rel="canonical" href="https://yoo-0213.github.io/2025/12/05/%E5%B7%A5%E5%85%B7/Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'winki\'s Blog',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/fonts.css"><link rel="stylesheet" href="/css/callout.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/Image/upload/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">无标题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2025-12-05T12:35:19.000Z" title="发表于 2025-12-05 20:35:19">2025-12-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1>配置代码</h1>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line">&quot;-------------------------- general config --------------------------</span><br><span class="line">&quot; 设置softtabstop有一个好处是可以用Backspace键来一次</span><br><span class="line">&quot; 删除4个空格. softtabstop的值为负数,会使用shiftwidth</span><br><span class="line">&quot; 的值,两者保持一致,方便统一缩进.</span><br><span class="line">set softtabstop=-1</span><br><span class="line">set expandtab                                   &quot; tab字符替换成空格</span><br><span class="line">set tabstop=4                                   &quot; 设置tab字符的长度为4</span><br><span class="line">set shiftwidth=4                                &quot; 自动缩进时，缩进长度为4</span><br><span class="line">set nobackup                                    &quot; 不需要备份备份</span><br><span class="line">set noswapfile                                  &quot; 不需要临时交换文件</span><br><span class="line">set backspace=indent,eol,start                  &quot; 正常使用backspace</span><br><span class="line">set nocompatible                                &quot; 不兼容vi</span><br><span class="line">autocmd FileType * setlocal formatoptions-=cro  &quot; 取消自动注释</span><br><span class="line">&quot;autocmd BufNewFile *.v 0r ~/.vim/templates/tempfirverilog.v    &quot; 创建.v文件时，自动调用模板</span><br><span class="line"></span><br><span class="line">&quot;-------------------------- display config --------------------------</span><br><span class="line">syntax on                                       &quot; 语法高亮</span><br><span class="line">set number                                      &quot; 显示行号</span><br><span class="line">set cursorline                                  &quot; 突出显示当前行</span><br><span class="line">set guifont=Monospace\ Regular\ 10              &quot; 设置字体</span><br><span class="line">set guioptions-=T                               &quot; 隐藏工具栏</span><br><span class="line">set guioptions-=m                               &quot; 隐藏菜单栏</span><br><span class="line">set guioptions-=r                               &quot; 隐藏右侧滚动条</span><br><span class="line">set guioptions-=R                                </span><br><span class="line">set guioptions-=l                                </span><br><span class="line">set guioptions-=L                                </span><br><span class="line">set guioptions-=b                                </span><br><span class="line">set laststatus=2                                &quot; 总是显示状态行</span><br><span class="line">&quot;set fileencodings=utf-8,cp936,big5,latin1      &quot; 遇到中文乱码时打开</span><br><span class="line"></span><br><span class="line">&quot;-------------------------- Key Remapping ---------------------------</span><br><span class="line">&quot;在插入模式下生效，将jk映射成Esc</span><br><span class="line">imap jk &lt;Esc&gt;</span><br><span class="line">&quot;在正常模式下生效，将space映射成:</span><br><span class="line">nmap &lt;space&gt; :</span><br><span class="line">&quot;在正常模式下生效，创建和关闭标签页</span><br><span class="line">&quot;nmap &lt;C-S-t&gt; :tabnew&lt;CR&gt;</span><br><span class="line">&quot;nmap &lt;C-S-w&gt; :tabc&lt;CR&gt;</span><br><span class="line">&quot;通过alt + 数字切换标签页</span><br><span class="line">:nn &lt;M-1&gt; 1gt</span><br><span class="line">:nn &lt;M-2&gt; 2gt</span><br><span class="line">:nn &lt;M-3&gt; 3gt</span><br><span class="line">:nn &lt;M-4&gt; 4gt</span><br><span class="line">:nn &lt;M-5&gt; 5gt</span><br><span class="line">:nn &lt;M-6&gt; 6gt</span><br><span class="line">:nn &lt;M-7&gt; 7gt</span><br><span class="line">:nn &lt;M-8&gt; 8gt</span><br><span class="line">:nn &lt;M-9&gt; 9gt</span><br><span class="line">:nn &lt;M-0&gt; :tablast&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;自定义缩写文件导入</span><br><span class="line">if filereadable(expand(&#x27;E:/Github/Vim/abbreviation.vim&#x27;))</span><br><span class="line">    source E:/Github/Vim/abbreviation.vim</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&quot;-------------------------- plugin config ---------------------------</span><br><span class="line">&quot;NERDTree</span><br><span class="line">    &quot;F3打开/关闭文件浏览器</span><br><span class="line">    nmap &lt;F3&gt; :NERDTreeToggle &lt;CR&gt;</span><br><span class="line">&quot;EasyAlign</span><br><span class="line">    xmap ga &lt;Plug&gt;(EasyAlign)</span><br><span class="line">    nmap ga &lt;Plug&gt;(EasyAlign)</span><br><span class="line">&quot;neocomplcache</span><br><span class="line">    let g:neocomplcache_enable_at_startup = 1</span><br><span class="line">&quot;nerdcommenter</span><br><span class="line">    au FileType c,cpp setlocal comments-=:// comments+=f://</span><br><span class="line">&quot;gruvbox</span><br><span class="line">    let g:gruvbox_contrast_dark = &#x27;medium&#x27;                      &quot; 设置对比度为中</span><br><span class="line">    autocmd vimenter * nested colorscheme gruvbox</span><br><span class="line">    set bg=dark</span><br><span class="line">&quot;automatic</span><br><span class="line">    &quot;\ati进行例化</span><br><span class="line">    map \ati :call g:AutoInst(0)&lt;Esc&gt;</span><br><span class="line">    let g:atu_autoinst_keep_chg   = 1                           &quot; 修改过的连线保留不刷新</span><br><span class="line">    let g:atv_autoinst_incl_width = 0                           &quot; 不添加多bit位宽</span><br><span class="line">    let g:atv_autoinst_incl_cmnt  = 0                           &quot; 不添加//注释</span><br><span class="line">    &quot;对齐位置</span><br><span class="line">    let g:atv_autopara_st_pos     = 4                           &quot; 起始位置</span><br><span class="line">    let g:atv_autopara_name_pos   = 64                          &quot; 信号名对齐位置</span><br><span class="line">    let g:atv_autopara_sym_pos    = 128                         &quot; 第二个括号对齐位置</span><br><span class="line">    let g:atv_autoinst_st_pos     = 4   </span><br><span class="line">    let g:atv_autoinst_name_pos   = 64  </span><br><span class="line">    let g:atv_autoinst_sym_pos    = 128 </span><br><span class="line">&quot;ALE</span><br><span class="line">    let g:ale_set_highting = 0</span><br><span class="line">    let g:ale_log_to_file = 0</span><br><span class="line">    let g:ale_cache_executable_check_failures=1</span><br><span class="line"></span><br><span class="line">&quot;----------------------------- plugin -------------------------------</span><br><span class="line">&quot;更改插件存放路径即可</span><br><span class="line">call plug#begin()</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/vim-startify-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/vim-easy-align-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/vim-airline-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/nerdtree-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/nerdcommenter-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/neocomplcache.vim-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/gruvbox-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/automatic-verilog-master&#x27;</span><br><span class="line">Plug &#x27;E:/Github/Vim/vim_plugin/ale-master&#x27;</span><br><span class="line">call plug#end()</span><br></pre></td></tr></table></figure>
+<hr>
+<h1>配置方法</h1>
+<h2 id="windows">windows</h2>
+<ol>
+<li>找到vim的配置文件路径 <code>F:/Vim/_vimrc</code>，修改为上面的代码，并保存</li>
+<li>将 <code>Vim\\vim_plugin</code> 复制到vim的安装路径下，并把其中的 <code>plug.vim</code> 复制到 <code>vim\vim91\autoload</code> 中</li>
+<li>配置完成</li>
+</ol>
+<h2 id="Linux">Linux</h2>
+<ol>
+<li>找到vim的配置文件路径 <code>~/.vimrc</code>，修改为上面代码，并保存</li>
+<li>将 <code>Vim\vim_plugin</code> 复制到vim的安装路径下，并把其中的 <code>plug.vim</code> 复制到 <code>~/.vim/autoload</code> 中</li>
+<li>配置完成</li>
+</ol>
+<h1>插件列表</h1>
+<table>
+<thead>
+<tr>
+<th><strong>插件名称</strong></th>
+<th><strong>功能</strong></th>
+<th><strong>github链接</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vim-plug</td>
+<td>插件管理</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/junegunn/vim-plug">https://github.com/junegunn/vim-plug</a></td>
+</tr>
+<tr>
+<td>NERDTree</td>
+<td>文件浏览器</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/preservim/nerdtree">https://github.com/preservim/nerdtree</a></td>
+</tr>
+<tr>
+<td>gruvbox</td>
+<td>主题配色</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/morhetz/gruvbox">https://github.com/morhetz/gruvbox</a></td>
+</tr>
+<tr>
+<td>nerdcommenter</td>
+<td>注释工具</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/preservim/nerdcommenter">https://github.com/preservim/nerdcommenter</a></td>
+</tr>
+<tr>
+<td>neocomplcache</td>
+<td>代码补全</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/Shougo/neocomplcache.vim">https://github.com/Shougo/neocomplcache.vim</a></td>
+</tr>
+<tr>
+<td>vim-airline</td>
+<td>状态栏美化</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/vim-airline/vim-airline">https://github.com/vim-airline/vim-airline</a></td>
+</tr>
+<tr>
+<td>vim-easy-align</td>
+<td>代码对齐</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/junegunn/vim-easy-align">https://github.com/junegunn/vim-easy-align</a></td>
+</tr>
+<tr>
+<td>automatic-verilog</td>
+<td>自动例化</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/HonkW93/automatic-verilog">https://github.com/HonkW93/automatic-verilog</a></td>
+</tr>
+<tr>
+<td>ALE</td>
+<td>语法检查工具</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/dense-analysis/ale">https://github.com/dense-analysis/ale</a></td>
+</tr>
+<tr>
+<td>vim-startify</td>
+<td>最近打开文件</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/mhinz/vim-startify">https://github.com/mhinz/vim-startify</a></td>
+</tr>
+<tr>
+<td>vtags</td>
+<td>信号追踪</td>
+<td><a target="_blank" rel="noopener" href="https://www.vim.org/scripts/script.php?script_id=5494">https://www.vim.org/scripts/script.php?script_id=5494</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="NERDTree">NERDTree</h2>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;配置代码</span></span><br><span class="line"><span class="string">    &quot;</span>F3打开/关闭文件浏览器</span><br><span class="line">    nmap &lt;F3&gt; :NERDTreeToggle &lt;CR&gt;</span><br><span class="line">    <span class="string">&quot;NERDTree配置  </span></span><br><span class="line"><span class="string">	let NERDChristmasTree=1                                                  &quot;</span>显示增强</span><br><span class="line">	<span class="keyword">let</span> NERDTreeAutoCenter=<span class="number">1</span>                                                 <span class="string">&quot;自动调整焦点</span></span><br><span class="line"><span class="string">	let NERDTreeShowFiles=1                                                  &quot;</span>显示文件</span><br><span class="line">	<span class="keyword">let</span> NERDTreeShowLineNumbers=<span class="number">1</span>                                            <span class="string">&quot;显示行号</span></span><br><span class="line"><span class="string">	let NERDTreeHightCursorline=1                                            &quot;</span>高亮当前文件</span><br><span class="line">	<span class="keyword">let</span> NERDTreeShowHidden=<span class="number">0</span>                                                 <span class="string">&quot;显示隐藏文件</span></span><br><span class="line"><span class="string">	let NERDTreeMinimalUI=0                                                  &quot;</span>不显示&#x27;Bookmarks&#x27; label &#x27;Press ? <span class="keyword">for</span> help&#x27;</span><br><span class="line">	<span class="keyword">let</span> NERDTreeWinSize=<span class="number">31</span>                                                   <span class="string">&quot;窗口宽度</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	let g:NERDTreeIgnore = [&#x27;xsim.dir&#x27;,&#x27;work&#x27;,&#x27;xvlog.log&#x27;,&#x27;xvlog.pb&#x27;]        &quot;</span>不显示文件夹和文件</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th><strong>按键</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ctrl + w + j/k/h/l</td>
+<td>切换左/右/上/下边视窗</td>
+</tr>
+<tr>
+<td>o</td>
+<td>打开文件、目录</td>
+</tr>
+<tr>
+<td>i</td>
+<td>拆分出窗口打开所选文件（水平视窗）</td>
+</tr>
+<tr>
+<td>s</td>
+<td>拆分出窗口打开所选文件（垂直视窗）</td>
+</tr>
+<tr>
+<td>R</td>
+<td>刷新目录</td>
+</tr>
+<tr>
+<td>t</td>
+<td>在标签页中打开</td>
+</tr>
+<tr>
+<td>T</td>
+<td>在后台标签页中打开（焦点仍保持在当前标签页）</td>
+</tr>
+<tr>
+<td>I</td>
+<td>显示隐藏文件</td>
+</tr>
+<tr>
+<td>x</td>
+<td>关闭当前文件的父目录</td>
+</tr>
+<tr>
+<td>C</td>
+<td>已当前根作为选定目录</td>
+</tr>
+<tr>
+<td>u</td>
+<td>将树根上移一个目录</td>
+</tr>
+<tr>
+<td>ma</td>
+<td>在需要创建文件的目录下敲命令ma然后输入要创建的文件名</td>
+</tr>
+<tr>
+<td>md</td>
+<td>选择删除的文件敲命令md输入y然后回车</td>
+</tr>
+<tr>
+<td>mm</td>
+<td>选择移动或修改的文件敲命令mm然后输入对应的目录和名称回车</td>
+</tr>
+<tr>
+<td>?</td>
+<td>快速帮助</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="报错">报错</h2>
+<ol>
+<li>如果显示<code>'git' executable was found</code> 就在<code>设置—系统—关于—高级系统设置—高级—环境变量—path—编辑—新建</code>添加Git的环境变量</li>
+<li>如果看到^M，就设置<code>:set ff=unix</code></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://yoo-0213.github.io">winki</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yoo-0213.github.io/2025/12/05/%E5%B7%A5%E5%85%B7/Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE/">https://yoo-0213.github.io/2025/12/05/%E5%B7%A5%E5%85%B7/Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://yoo-0213.github.io" target="_blank">winki's Blog</a>！</span></div></div><div class="tag_share"></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/06/05/%E5%B7%A5%E5%85%B7/%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/" title="【Vivado】工程管理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【Vivado】工程管理</div></div><div class="info-2"><div class="info-item-1">版本记录     版本号 描述 日期 作者     v1.0 初版 Vivado 工程管理文档 2026/06/01 winkiliang   v2.0 read_filelist函数中补充 “忽略sim_netlist的文件” 的条件判断 2026/06/23 winki     文件目录  1234567891011121314151617181920212223242526272829303132333435project	00_proj/									# 工程文件夹		my_project/			vu13p_top.xpr	01_src/										# 代码文件夹		00_hdl/									# HDL源代码			top/								# 顶层文件夹				filelist.f						# 顶层文件列表				vu13p_top.v				vu13p_top.vh				core_top.v				macro_top.v			module_a/							# 模块A文件夹				filelist.f						# 模块A文件列表				module...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/Image/upload/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">winki</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">配置代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">配置方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#windows"><span class="toc-number">2.1.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux"><span class="toc-number">2.2.</span> <span class="toc-text">Linux</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">插件列表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NERDTree"><span class="toc-number">3.1.</span> <span class="toc-text">NERDTree</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99"><span class="toc-number">3.2.</span> <span class="toc-text">报错</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

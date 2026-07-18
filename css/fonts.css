@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'PingFang SC';
+    font-display: swap;
+    src: url("../fonts/PingFangSC-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: 'FiraCode';
+    font-display: swap;
+    src: url("../fonts/FiraCode-Regular.woff2") format("woff2");
+}
+
+/* 针对所有使用 Fira Code 的元素关闭连字 */
+pre, code, kbd, samp {
+    -moz-font-feature-settings: "liga" 0;
+    -webkit-font-feature-settings: "liga" 0;
+    font-feature-settings: "liga" 0;
+    font-variant-ligatures: none;
+}
