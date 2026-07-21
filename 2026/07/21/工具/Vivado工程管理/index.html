@@ -1,0 +1,406 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Vivado工程管理 | winki's Blog</title><meta name="author" content="winki"><meta name="copyright" content="winki"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="通过工程结构、使用要求、Tcl脚本等方式管理工程。使其能通过脚本复刻完整的Vivado工程、或者通过Tcl脚本实现自动化操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vivado工程管理">
+<meta property="og:url" content="https://yoo-0213.github.io/2026/07/21/%E5%B7%A5%E5%85%B7/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="winki&#39;s Blog">
+<meta property="og:description" content="通过工程结构、使用要求、Tcl脚本等方式管理工程。使其能通过脚本复刻完整的Vivado工程、或者通过Tcl脚本实现自动化操作">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yoo-0213.github.io/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721224117041.png">
+<meta property="article:published_time" content="2026-07-21T09:15:30.000Z">
+<meta property="article:modified_time" content="2026-07-21T14:43:56.133Z">
+<meta property="article:author" content="winki">
+<meta property="article:tag" content="工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yoo-0213.github.io/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721224117041.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Vivado工程管理",
+  "url": "https://yoo-0213.github.io/2026/07/21/%E5%B7%A5%E5%85%B7/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/",
+  "image": "https://yoo-0213.github.io/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721224117041.png",
+  "datePublished": "2026-07-21T09:15:30.000Z",
+  "dateModified": "2026-07-21T14:43:56.133Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "winki",
+      "url": "https://yoo-0213.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/Picture/upload/avatar.jpg"><link rel="canonical" href="https://yoo-0213.github.io/2026/07/21/%E5%B7%A5%E5%85%B7/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Vivado工程管理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/fonts.css"><link rel="stylesheet" href="/css/callout.css"><link rel="stylesheet" href="/css/mathml.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div class="bg-animation" id="web_bg" style="background-color: #EBEDF1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/Picture/upload/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Vivado工程管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2026-07-21T09:15:30.000Z" title="发表于 2026-07-21 17:15:30">2026-07-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1>前言</h1>
+<hr>
+<p>首先，我个人是有点洁癖的，我希望我拿到的代码/工程都应该是干净、整洁、没有其他乱七八糟的东西<br>
+对外也是如此，因此我想通过一个脚本，让其他拥有该代码的人在运行这个脚本之后，也能复刻同样的工程出来<br>
+</br></p>
+<p>我把搭建 Vivado 工程的每一个步骤的 tcl 命令都整理出来<br>
+输出成现在看到的 <code>create_project.tcl</code> 文件，并且把一些常用的动作也写成脚本（<code>auto_xxx.tcl</code> ）<br>
+</br></p>
+<p>另外，我也把搭建工程时遇到的问题，也作为一个规范去约束开发人员<br>
+如：当某个子系统集成到工程中时，该子系统包含哪些文件、以及需要哪些文件支撑，这些信息是工程负责人不一定清楚的<br>
+需要开发人员列一个 filelist 清单（像仿真中的 filelist 一样），提供给工程负责人<br>
+</br></p>
+<p>这样，集成某个子系统时，只需要把 filelist 吃进去就可以了<br>
+但 Vivado本身时不支持 filelist 的，所以这里我写了一个函数用来吃这个 filelist<br>
+</br></p>
+
+<div class="callout" data-callout="important">
+<div class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+</div>
+<div class="callout-title-inner">Important</div>
+</div>
+<div class="callout-content"><p>最后，整个工程管理的目的都是为了提供一个干净、整洁的环境给使用者，并且将重复、繁琐的任务给写成自动化脚本<br>
+以节省各位开发人员宝贵的时间～</p>
+</div></div><p></br></br></br></p>
+<h1>工程搭建</h1>
+<hr>
+<h2 id="第一步：文件目录">第一步：文件目录</h2>
+<p><img src="/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721125152138.png" alt="462"></p>
+<p>如上图所示，建议按照<a href="##%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95">使用规范 — 工程目录</a>中的格式创建工程<br>
+</br></br></br></p>
+<h2 id="第二步：复制源码">第二步：复制源码</h2>
+<p>该工程管理只需要在 <code>project/script</code> 路径下创建如下 4 个文件，所有代码均在 <a href="#%E6%BA%90%E7%A0%81">源码</a> 一节中</p>
+<ul>
+<li>run_build.sh：create_project.tcl 的启动脚本</li>
+<li>create_project.tcl：Vivado 工程中的 Tcl 命令合集，用于复刻 Vivado 工程</li>
+<li>auto_modify_data.tcl：自动修改版本日期</li>
+<li>auto_export_bin.tcl：自动导出 Bitstream 到某路径<br>
+</br></br></br></li>
+</ul>
+<h2 id="第三步：修改脚本">第三步：修改脚本</h2>
+<p><mark>只需要按照注释中有标有 1. 2. 3. 这样的步骤，去修改对应的路径和参数即可</mark></p>
+<h3 id="run-sh"><a target="_blank" rel="noopener" href="http://run.sh">run.sh</a></h3>
+<p><img src="/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721125950007.png" alt="600"></p>
+<p>该脚本仅仅是作为 <code>create_project.tcl</code> 的启动脚本。如果是按照 ”<a href="##%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95">使用规范 — 工程目录</a>“ 中定义的目录格式的话，无需改动</p>
+<ul>
+<li>22行代码：以 GUI 的形式搭建 Vivado 工程</li>
+<li>23行代码：以非 GUI 的形式搭建 Vivado 工程 </br></br></br></li>
+</ul>
+<h3 id="create-project-tcl">create_project.tcl</h3>
+<ul>
+<li>
+<p><strong>第一处：设置变量</strong></p>
+<p><img src="/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721131006714.png" alt="600"></p>
+<ul>
+<li>GITLAB：工程源码的顶层路径</li>
+<li>project_name：搭建的 Vivado 工程名称</li>
+<li>top_module：顶层文件名（代码中的顶层 Module 名）</li>
+<li>header_name：头文件，脚本定义该头文件的路径为 <code>${GITLAB}/01_src/00_hdl/top/</code> （可根据情况修改）</li>
+<li>targe_device：FPGA型号</br></br></br></li>
+</ul>
+</li>
+<li>
+<p><strong>第二处：导入文件</strong></p>
+<p><img src="/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721131028923.png" alt="600"></p>
+<ul>
+<li>
+<p>source code：各个子系统的 filelist.f 文件</p>
+</li>
+<li>
+<p>IP Core：工程中所用到的 IP Core</p>
+</li>
+<li>
+<p>xdc file：工程约束文件</p>
+<p>注：read_filelist 并非 Vivado 提供的命令，而是自定义的一个函数<br>
+内容是将 filelist.f 里面的文件前都加上 add_files -norecurse（这是 Vivado 官方添加文件的 tcl 命令）</br></br></br></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="auto-modify-data-tcl">auto_modify_data.tcl</h3>
+<p><img src="/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721131752845.png" alt="600"><br>
+我们在编译工程时，一般会在某个寄存器里面写入当前编译的时间或版本。<br>
+这里通过脚本识别 ”带有版本信息的文件“ 中是否匹配字段，若匹配上，则对当前行进行修改</p>
+<ul>
+<li>header_file：带有版本信息的文件</li>
+<li>match_filed：匹配字段</li>
+<li>22行，匹配后改写的内容格式</br></br></br></li>
+</ul>
+<h3 id="auto-export-bin-tcl">auto_export_bin.tcl</h3>
+<p><img src="/Image/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/file-20260721131810997.png" alt="600"><br>
+该脚本的作用是将生成的 bin 文件和 ltx 文件按照编译前修改的版本日期命名，并导出到对应的路径</p>
+<ul>
+<li>header_file：带有版本信息的文件，用于获取编译时间</li>
+<li>output_name：修改命名后的输出路径</br></br></br></li>
+</ul>
+<h1>使用规范</h1>
+<hr>
+<h2 id="工程目录">工程目录</h2>
+<ol>
+<li>搭建工程时，建议按照以下层级目录进行搭建，当前的脚本都是按照该格式获取对应文件；若想按照自己的目录结构搭建，需要清晰知道修改脚本的哪些地方</li>
+</ol>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">project</span><br><span class="line">    00_proj/                                    # 工程文件夹</span><br><span class="line">        my_project/</span><br><span class="line">            my_project.xpr</span><br><span class="line">    01_src/                                     # 代码文件夹</span><br><span class="line">        00_hdl/                                 # HDL源代码</span><br><span class="line">            top/                                # 顶层文件夹</span><br><span class="line">                filelist.f                      # 顶层文件列表</span><br><span class="line">                header.vh                       # 头文件</span><br><span class="line">                vu13p_top.v</span><br><span class="line">                core_top.v</span><br><span class="line">                macro_top.v</span><br><span class="line">            module_a/                           # 模块A文件夹</span><br><span class="line">                filelist.f</span><br><span class="line">                module_a_top.v</span><br><span class="line">                module_a_sub_1.v</span><br><span class="line">                module_a_sub_2.v</span><br><span class="line">            module_b/                           # 模块B文件夹</span><br><span class="line">                filelist.f</span><br><span class="line">                module_b_top.v</span><br><span class="line">                module_b_sub_1.v</span><br><span class="line">                module_b_sub_2.v</span><br><span class="line">        01_ipcore/                              # IP Core文件夹</span><br><span class="line">            DDR_MIG/</span><br><span class="line">            MMCM/</span><br><span class="line">            BRAM/</span><br><span class="line">        02_xdc/                                 # 约束文件夹</span><br><span class="line">            pin.xdc</span><br><span class="line">            timing.xdc</span><br><span class="line">            pblock.xdc</span><br><span class="line">    02_sim/                                     # 仿真文件夹</span><br><span class="line">        00_ut/</span><br><span class="line">        01_st/</span><br><span class="line">    script/                                     # 脚本文件夹</span><br><span class="line">        run_build.sh                            # 执行creste_project.tcl脚本</span><br><span class="line">        create_project.tcl                      # 建立工程脚本</span><br><span class="line">        auto_modify_data.tcl                    # 自动更新版本时间脚本</span><br><span class="line">        auto_export_bin.tcl                     # 自动导出bin文件脚本</span><br><span class="line">    .gitignore                                  # Git忽略规则文件</span><br><span class="line">    README.txt                                  # 说明文档</span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h2 id="文件列表">文件列表</h2>
+<ol>
+<li>每个功能模块中都需要有一个包含该功能所有子模块的文件列表</li>
+<li>路径的前缀必须是 <code>${GITLAB}</code> ，由于开发人员的文件路径不同，使用相对路径可统一文件的获取路径</li>
+<li>另外在建立工程时，tcl 脚本是通过识别 <code>${GITLAB}</code> 字段把文件添加到 Vivado 中。统一路径前缀后，可只在每个功能模块中添加一个 <code>filelist. f</code> 表即可在<mark>仿真</mark>和<mark>Vivado工程</mark>中使用</li>
+</ol>
+<p>文件格式如下</p>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$&#123;GITLAB&#125;/ifpga/i2c_master/aaa.v</span><br><span class="line">$&#123;GITLAB&#125;/ifpga/i2c_master/bbb.v</span><br><span class="line">$&#123;GITLAB&#125;/ifpga/i2c_master/ccc.v</span><br><span class="line">...</span><br><span class="line">$&#123;GITLAB&#125;/common/reg_op/rw_reg.v</span><br><span class="line">$&#123;GITLAB&#125;/common/reg_op/ntest.v</span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h2 id="gitignore">.gitignore</h2>
+<ol>
+<li>在使用 Git 管理工程时，<code>.gitignore</code> 是用来忽略某些不需要 track 的文件夹和文件</li>
+<li>当我们使用 ALE 去辅助编码时（检测语法是否正确），通常会产生一些临时的 <code>work/</code> <code>xsim.dir/</code> <code>xvlog.log</code> <code>xvlog.pb</code> 这些临时文件，那么在查看 <code>git status</code> 时不想看到这些临时文件，就可以通过 <code>.gitignore</code> 给忽略掉</li>
+<li>由于 Vivado 工程可通过 <code>create_project.tcl</code> 脚本去搭建，因此在使用 Git 的时候就不需要上传工程的 xpr 文件</li>
+</ol>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Folder									           #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line">work/</span><br><span class="line">xsim.dir/</span><br><span class="line"><span class="number">00</span>_proj/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   File									           #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line">.gitignore</span><br><span class="line">xvlog.log</span><br><span class="line">xvlog.pb</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h1>源码</h1>
+<hr>
+<h2 id="run-sh-2"><a target="_blank" rel="noopener" href="http://run.sh">run.sh</a></h2>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#######################################################################</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                  Auto Create Vivado Project                         <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                                                                     <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                                                                     <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">How to use ?                                                         <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">1.Modify internal parameters <span class="keyword">in</span> <span class="string">&quot; create_project.tcl &quot;</span>               <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">2.Execute <span class="string">&quot; source run.sh &quot;</span> <span class="keyword">in</span> the terminal                          <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                                                                     <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                                                                     <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">If you want to create Vivado Project by GUI                          <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">     Use <span class="string">&quot;vivado -source <span class="variable">$PATH</span>/create_project.tcl&quot;</span>                   <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">If you want to create Vivado Project by Batch mode (No GUI)          <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">     Use <span class="string">&quot;vivado -mode batch -source <span class="variable">$PATH</span>/create_project.tcl&quot;</span>       <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                                                                     <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">                                                                     <span class="comment">#</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">#######################################################################</span></span></span><br><span class="line">PATH=&quot;$(cd &quot;$(dirname &quot;$&#123;BASH_SOURCE[0]&#125;&quot;)&quot; &amp;&amp; pwd)&quot;</span><br><span class="line"></span><br><span class="line">cd ../00_proj</span><br><span class="line">module add Vivado/2023.2.1</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">vivado -<span class="built_in">source</span> <span class="variable">$PATH</span>/create_project.tcl</span></span><br><span class="line">vivado -mode batch -source $PATH/create_project.tcl</span><br><span class="line">cd -</span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h2 id="create-project-tcl-2">create_project.tcl</h2>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Localparameter									   #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="keyword">set</span> tcl_dir			[<span class="keyword">file</span> dirname [<span class="keyword">file</span> normalize [<span class="keyword">info</span> script]]]</span><br><span class="line"><span class="keyword">set</span>	project_dir		[<span class="keyword">file</span> normalize <span class="string">&quot;$&#123;tcl_dir&#125;/../00_proj&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">proc</span><span class="title"> read_filelist</span> &#123;<span class="keyword">filename</span>&#125; &#123;</span><br><span class="line">	<span class="keyword">global</span> GITLAB</span><br><span class="line">	<span class="keyword">set</span> fp		[<span class="keyword">open</span> <span class="variable">$filename</span> r]</span><br><span class="line">	<span class="keyword">set</span> lines 	[<span class="keyword">split</span> [<span class="keyword">read</span> <span class="variable">$fp</span>] <span class="string">&quot;\n&quot;</span>]</span><br><span class="line">	<span class="keyword">close</span> <span class="variable">$fp</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">foreach</span> line <span class="variable">$lines</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> &#123;[<span class="keyword">string</span> match <span class="string">&quot;*\$&#123;GITLAB&#125;&quot;</span> <span class="variable">$line</span>] &amp;&amp; ![<span class="keyword">string</span> match <span class="string">&quot;*_sim_netlist*&quot;</span> <span class="variable">$line</span>]&#125; &#123;</span><br><span class="line">			<span class="keyword">set</span> new_line	[<span class="keyword">string</span> map [<span class="keyword">list</span> <span class="string">&quot;\$&#123;GITLAB&#125;&quot;</span> <span class="string">&quot;$GITLAB&quot;</span>] <span class="variable">$line</span>]</span><br><span class="line">			<span class="keyword">set</span> cmd			<span class="string">&quot;add_files -norecurse $new_line&quot;</span></span><br><span class="line">			<span class="keyword">eval</span> <span class="variable">$cmd</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Set Variables									   #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment"># ---------------- 1.Set Gitlab Path -----------------------------------</span></span><br><span class="line"><span class="keyword">set</span> GITLAB			/proj/winkiliang</span><br><span class="line"><span class="keyword">set</span>	source_dir		/proj/winkiliang/ifpga</span><br><span class="line"><span class="keyword">set</span>	common_dir		/proj/winkiliang/common</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 2.Set Project Name ----------------------------------</span></span><br><span class="line"><span class="keyword">set</span> project_name    <span class="string">&quot;my_project&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 3.Set Top Module ------------------------------------</span></span><br><span class="line"><span class="keyword">set</span> top_module    	<span class="string">&quot;VU13P_TOP&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 4.Set Header File -----------------------------------</span></span><br><span class="line"><span class="keyword">set</span> header_name    	<span class="string">&quot;glb_header.vh&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 5.Set FPGA Part Name --------------------------------</span></span><br><span class="line"><span class="keyword">set</span> target_device   <span class="string">&quot;xcvu13p-flga2577-2-i&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Creat Vivado Project							   #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line">create_project <span class="variable">$project_name</span> <span class="variable">$&#123;project_dir&#125;</span>/<span class="variable">$&#123;project_name&#125;</span> -part <span class="variable">$target_device</span> -force</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Import Source File								   #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment"># ---------------- 1.source code ---------------------------------------</span></span><br><span class="line">read_filelist <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">00</span>_hdl/top/filelist.f</span><br><span class="line">read_filelist <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">00</span>_hdl/gpio/filelist.f</span><br><span class="line">read_filelist <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">00</span>_hdl/ddr/filelist.f</span><br><span class="line">read_filelist <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">00</span>_hdl/<span class="keyword">clock</span>/filelist.f</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 2.IP core -------------------------------------------</span></span><br><span class="line">add_files -norecurse <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">01</span>_ipcore/MMCM/MMCM.xci</span><br><span class="line">add_files -norecurse <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">01</span>_ipcore/SERDES/SERDES.xci</span><br><span class="line">add_files -norecurse <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">01</span>_ipcore/DDR4_MIG/DDR4_MIG.xci</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 3.xdc file ------------------------------------------</span></span><br><span class="line">add_files -fileset constrs_1 -norecurse <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">02</span>_xdc/pblock.xdc</span><br><span class="line">add_files -fileset constrs_1 -norecurse <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">02</span>_xdc/vu13p_pin.xdc</span><br><span class="line">add_files -fileset constrs_1 -norecurse <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">02</span>_xdc/vu13p_timing.xdc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Auto Set Vivado	Property						   #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#set_property top $top_module [current_fileset]</span></span><br><span class="line"><span class="comment">#set_property is_global_include true [get_files $&#123;source_dir&#125;/00_hdl/top/$&#123;header_name&#125;]</span></span><br><span class="line"><span class="comment">#add_files -fileset utils_1 -norecurse $&#123;tcl_dir&#125;/auto_modify_data.tcl</span></span><br><span class="line"><span class="comment">#set_property STEPS.SYNTH_DESIGN.TCL.PRE [ get_files $&#123;tcl_dir&#125;/auto_modify_data.tcl -of [get_fileset utils_1] ] [get_runs synth_1]</span></span><br><span class="line"></span><br><span class="line">set_property top <span class="variable">$top_module</span> [current_fileset]</span><br><span class="line">set_property is_global_include true [get_files <span class="variable">$&#123;source_dir&#125;</span>/<span class="number">00</span>_hdl/top/<span class="variable">$&#123;header_name&#125;</span>]</span><br><span class="line">add_files -fileset utils_1 -norecurse <span class="variable">$&#123;tcl_dir&#125;</span>/auto_modify_data.tcl</span><br><span class="line">add_files -fileset utils_1 -norecurse <span class="variable">$&#123;tcl_dir&#125;</span>/auto_export_bin.tcl</span><br><span class="line">set_property STEPS.SYNTH_DESIGN.TCL.PRE     [ get_files <span class="variable">$&#123;tcl_dir&#125;</span>/auto_modify_data.tcl -of [get_fileset utils_1] ] [get_runs synth_1]</span><br><span class="line">set_property STEPS.WRITE_BITSTREAM.TCL.POST <span class="variable">$&#123;tcl_dir&#125;</span>/auto_export_bin.tcl [get_runs -filter &#123;IS_IMPLEMENTATION == <span class="number">1</span>&#125;]</span><br><span class="line"></span><br><span class="line"><span class="keyword">puts</span> <span class="string">&quot;########################################################################&quot;</span></span><br><span class="line"><span class="keyword">puts</span> <span class="string">&quot;#&quot;</span></span><br><span class="line"><span class="keyword">puts</span> <span class="string">&quot;# 	Project $project_name created successfully in $project_dir ~	  &quot;</span></span><br><span class="line"><span class="keyword">puts</span> <span class="string">&quot;#&quot;</span></span><br><span class="line"><span class="keyword">puts</span> <span class="string">&quot;########################################################################&quot;</span></span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h2 id="auto-modify-data-tcl-2">auto_modify_data.tcl</h2>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#                                                                      #</span></span><br><span class="line"><span class="comment">#                   Auto Modify Version Data                           #</span></span><br><span class="line"><span class="comment">#                                                                      #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="keyword">set</span> tcl_path        [<span class="keyword">file</span> dirname [<span class="keyword">info</span> script]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 1.Set header file -----------------------------------</span></span><br><span class="line"><span class="keyword">set</span> header_file     <span class="variable">$&#123;tcl_path&#125;</span>/../<span class="number">01</span>_src/hdl/top/glb_header.vh</span><br><span class="line"><span class="comment"># ---------------- 2.Set Match filed -----------------------------------</span></span><br><span class="line"><span class="keyword">set</span> match_filed     <span class="string">&quot;*parameter*VERSION_DATA*&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> rd_file         [<span class="keyword">open</span> <span class="variable">$header_file</span> r]</span><br><span class="line"><span class="keyword">set</span> lines           [<span class="keyword">split</span> [<span class="keyword">read</span> <span class="variable">$rd_file</span>] <span class="string">&quot;\n&quot;</span>]</span><br><span class="line"><span class="keyword">set</span> timestamp       [<span class="keyword">clock</span> <span class="keyword">format</span> [<span class="keyword">clock</span> seconds] -<span class="keyword">format</span> %m%d%H%M]</span><br><span class="line"><span class="keyword">close</span> <span class="variable">$rd_file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> wr_file         [<span class="keyword">open</span> <span class="variable">$header_file</span> w]</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> line <span class="variable">$lines</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> &#123;[<span class="keyword">string</span> match <span class="variable">$match_filed</span> <span class="variable">$line</span>]&#125; &#123;</span><br><span class="line">        <span class="keyword">puts</span> <span class="variable">$wr_file</span> <span class="string">&quot;    parameter                        VERSION_DATA = 32&#x27;h$&#123;timestamp&#125;&quot;</span></span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        <span class="keyword">puts</span> <span class="variable">$wr_file</span> <span class="variable">$line</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">close</span> <span class="variable">$wr_file</span></span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h2 id="auto-export-bin-tcl-2">auto_export_bin.tcl</h2>
+
+<details class="callout" data-callout="example" data-callout-fold="+" open>
+<summary class="callout-title">
+<div class="callout-title-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+</div>
+<div class="callout-title-inner">Example</div>
+<div class="callout-fold"></div>
+</summary>
+<div class="callout-content"><p></p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">#                   Auto Modify Version Data						   #</span></span><br><span class="line"><span class="comment">#																	   #</span></span><br><span class="line"><span class="comment">########################################################################</span></span><br><span class="line"><span class="keyword">set</span>	tcl_path		[<span class="keyword">file</span> dirname [<span class="keyword">info</span> script]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---------------- 1.Set header file -----------------------------------</span></span><br><span class="line"><span class="keyword">set</span> header_file		<span class="variable">$&#123;tcl_path&#125;</span>/../<span class="number">01</span>_src/hdl/top/glb_header.vh</span><br><span class="line"><span class="comment"># ---------------- 2.Set output direction ------------------------------</span></span><br><span class="line"><span class="keyword">set</span> output_name     ~/bitstream/vu13p_<span class="variable">$timestamp</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> rd_file			[<span class="keyword">open</span> <span class="variable">$header_file</span> r]</span><br><span class="line"><span class="keyword">set</span> timestamp       <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> &#123;[<span class="keyword">gets</span> <span class="variable">$rd_file</span> line] &gt;= <span class="number">0</span>&#125; &#123;</span><br><span class="line">    <span class="keyword">if</span> &#123;[<span class="keyword">regexp</span> -nocase &#123;VERSION_DATA\s*=\s*\d+&#x27;h([<span class="number">0</span><span class="number">-9</span>a-f]+)&#125; <span class="variable">$line</span> -&gt; timestamp]&#125; &#123;</span><br><span class="line">        <span class="keyword">puts</span> <span class="variable">$timestamp</span></span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">close</span> <span class="variable">$rd_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#set impl_dir [get_property DIRECTORY [current_run -implementation]]</span></span><br><span class="line"><span class="keyword">set</span> impl_dir [get_property DIRECTORY [get_runs <span class="variable">$::env</span>(ACTIVE_STEP_RUN)]]</span><br><span class="line"><span class="keyword">set</span> bin_file [<span class="keyword">glob</span> -nocomplain -directory <span class="variable">$impl_dir</span> *.bit]</span><br><span class="line"><span class="keyword">set</span> ltx_file [<span class="keyword">glob</span> -nocomplain -directory <span class="variable">$impl_dir</span> *.ltx]</span><br><span class="line"></span><br><span class="line"><span class="keyword">file</span> copy <span class="variable">$bin_file</span> <span class="variable">$output_name</span>.bin</span><br><span class="line"><span class="keyword">file</span> copy <span class="variable">$ltx_file</span> <span class="variable">$output_name</span>.ltx</span><br></pre></td></tr></table></figure>
+</div></details><p></br></br></br></p>
+<h1>版本记录</h1>
+<hr>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">版本号</th>
+<th>描述</th>
+<th style="text-align:center">日期</th>
+<th style="text-align:center">作者</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">v1.0</td>
+<td>初版 Vivado 工程管理文档</td>
+<td style="text-align:center">2026/06/01</td>
+<td style="text-align:center">winki</td>
+</tr>
+<tr>
+<td style="text-align:center">v2.0</td>
+<td>read_filelist函数中补充 “忽略sim_netlist的文件” 的条件判断</td>
+<td style="text-align:center">2026/06/23</td>
+<td style="text-align:center">winki</td>
+</tr>
+<tr>
+<td style="text-align:center"></br></br></br></td>
+<td></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h1>待优化事项</h1>
+<hr>
+<ul>
+<li>[ ] gitignore 中并不完善，如：对于已经 track 的 ip core ，非必要我们不再关注，所以 git status 里可以不显示<br>
+</br></br></br></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://yoo-0213.github.io">winki</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yoo-0213.github.io/2026/07/21/%E5%B7%A5%E5%85%B7/Vivado%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86/">https://yoo-0213.github.io/2026/07/21/工具/Vivado工程管理/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://yoo-0213.github.io" target="_blank">winki's Blog</a>！</span></div></div><div class="tag_share"></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/07/02/%E5%8D%8F%E8%AE%AE/%E4%BB%B2%E8%A3%81%E5%99%A8/" title="Arbiter 仲裁器"><img class="cover" src="/Image/%E4%BB%B2%E8%A3%81%E5%99%A8/file-20260721085015116.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Arbiter 仲裁器</div></div><div class="info-2"><div class="info-item-1">记录常用的仲裁算法</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/2026/06/13/%E5%8D%8F%E8%AE%AE/I2C%E5%8D%8F%E8%AE%AE/" title="I2C协议"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-13</div><div class="info-item-2">I2C协议</div></div></div></a><a class="pagination-related no-desc" href="/2025/12/05/%E5%B7%A5%E5%85%B7/Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE/" title="Vim个人配置"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-05</div><div class="info-item-2">Vim个人配置</div></div></div></a><a class="pagination-related" href="/2026/06/11/%E5%B7%A5%E5%85%B7/%E4%BB%BF%E7%9C%9F%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Vcs+Verdi 仿真环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-11</div><div class="info-item-2">Vcs+Verdi 仿真环境搭建</div></div><div class="info-2"><div class="info-item-1">搭建一套Vcs和Verdi联合起来的仿真环境，目的是让使用者更专注于Testbench的编写，无需关注其他参数配置；同时工程中的一些文件索引也能适用于Vivado的工程，使得整个工程更加整洁</div></div></div></a><a class="pagination-related no-desc" href="/2025/12/05/%E8%AF%AD%E6%B3%95/Markdown%E8%AF%AD%E6%B3%95/" title="Markdown语法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-05</div><div class="info-item-2">Markdown语法</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/Picture/upload/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">winki</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yoo-0213"><i class="fab fa-github"></i><span>Follow</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">工程搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">2.1.</span> <span class="toc-text">第一步：文件目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%A4%8D%E5%88%B6%E6%BA%90%E7%A0%81"><span class="toc-number">2.2.</span> <span class="toc-text">第二步：复制源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E4%BF%AE%E6%94%B9%E8%84%9A%E6%9C%AC"><span class="toc-number">2.3.</span> <span class="toc-text">第三步：修改脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#run-sh"><span class="toc-number">2.3.1.</span> <span class="toc-text">run.sh</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#create-project-tcl"><span class="toc-number">2.3.2.</span> <span class="toc-text">create_project.tcl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#auto-modify-data-tcl"><span class="toc-number">2.3.3.</span> <span class="toc-text">auto_modify_data.tcl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#auto-export-bin-tcl"><span class="toc-number">2.3.4.</span> <span class="toc-text">auto_export_bin.tcl</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">使用规范</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95"><span class="toc-number">3.1.</span> <span class="toc-text">工程目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">文件列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gitignore"><span class="toc-number">3.3.</span> <span class="toc-text">.gitignore</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">源码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#run-sh-2"><span class="toc-number">4.1.</span> <span class="toc-text">run.sh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#create-project-tcl-2"><span class="toc-number">4.2.</span> <span class="toc-text">create_project.tcl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#auto-modify-data-tcl-2"><span class="toc-number">4.3.</span> <span class="toc-text">auto_modify_data.tcl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#auto-export-bin-tcl-2"><span class="toc-number">4.4.</span> <span class="toc-text">auto_export_bin.tcl</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">版本记录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">待优化事项</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="/css/hexo_resize_image.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
