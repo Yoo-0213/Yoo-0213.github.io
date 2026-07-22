@@ -694,6 +694,10 @@ document.addEventListener('DOMContentLoaded', () => {
     'go-up': () => { // Back to top
       btf.scrollToDest(0, 500)
     },
+    'go-down': () => {
+      const bottom = document.body.scrollHeight
+      btf.scrollToDest(bottom, 500)
+    },
     'hide-aside-btn': () => { // Hide aside
       const $htmlDom = document.documentElement.classList
       const saveStatus = $htmlDom.contains('hide-aside') ? 'show' : 'hide'
@@ -992,3 +996,14 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 })
+// // 隐藏“直达底部”按钮。
+// window.addEventListener('scroll', () => {
+//   const goDown = document.getElementById('go-down')
+//   if (!goDown) return
+//   const scrollBottom = window.scrollY + window.innerHeight
+//   if (scrollBottom >= document.body.scrollHeight - 50) {
+//     goDown.style.display = 'none'
+//   } else {
+//     goDown.style.display = 'flex'
+//   }
+// })
