@@ -1,0 +1,731 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>AMBA总线 —— AXI-Full | winki's Blog</title><meta name="author" content="winki"><meta name="copyright" content="winki"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="概述    简介  这个协议是什么？ 主要解决什么问题？ ‌          应用场景  都应用在什么场景下？ ‌            特点与优缺点  有什么特点？ ‌          版本差异  不同的版本之间，有什么区别？ 新增了什么功能？     协议架构    系统架构  一个典型的 AXI 总线网络可以由多个 Master 、Slave 设备通过 Interconnect 进行连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AMBA总线 —— AXI-Full">
+<meta property="og:url" content="https://yoo-0213.github.io/FPGA/amba%E6%80%BB%E7%BA%BF-%E2%80%94%E2%80%94-axi-full/index.html">
+<meta property="og:site_name" content="winki&#39;s Blog">
+<meta property="og:description" content="概述    简介  这个协议是什么？ 主要解决什么问题？ ‌          应用场景  都应用在什么场景下？ ‌            特点与优缺点  有什么特点？ ‌          版本差异  不同的版本之间，有什么区别？ 新增了什么功能？     协议架构    系统架构  一个典型的 AXI 总线网络可以由多个 Master 、Slave 设备通过 Interconnect 进行连接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yoo-0213.github.io/Picture/upload/avatar.jpg">
+<meta property="article:published_time" content="2026-11-10T09:07:04.000Z">
+<meta property="article:modified_time" content="2026-11-12T04:57:41.977Z">
+<meta property="article:author" content="winki">
+<meta property="article:tag" content="片内总线协议">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yoo-0213.github.io/Picture/upload/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AMBA总线 —— AXI-Full",
+  "url": "https://yoo-0213.github.io/FPGA/amba%E6%80%BB%E7%BA%BF-%E2%80%94%E2%80%94-axi-full/",
+  "image": "https://yoo-0213.github.io/Picture/upload/avatar.jpg",
+  "datePublished": "2026-11-10T09:07:04.000Z",
+  "dateModified": "2026-11-12T04:57:41.977Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "winki",
+      "url": "https://yoo-0213.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/Picture/upload/avatar.jpg"><link rel="canonical" href="https://yoo-0213.github.io/FPGA/amba%E6%80%BB%E7%BA%BF-%E2%80%94%E2%80%94-axi-full/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'AMBA总线 —— AXI-Full',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/fonts.css"><link rel="stylesheet" href="/css/callout.css"><link rel="stylesheet" href="/css/mathml.css"><link rel="stylesheet" href="/css/disable_footer.css"><meta name="google-site-verification" content="TnQ-OCyLOalRfoUl3AHiKGkDW7roEXXF93B0kkNsLxg" /><meta name="generator" content="Hexo 8.1.2"></head><body><div class="bg-animation" id="web_bg" style="background-color: #EBEDF1;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/Picture/upload/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">AMBA总线 —— AXI-Full</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2026-11-10T09:07:04.000Z" title="发表于 2026-11-10 17:07:04">2026-11-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/FPGA/">FPGA</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h1 id="概述">概述</h1>
+<hr>
+<ul>
+<li>
+<p><strong>简介</strong></p>
+<ul>
+<li>这个协议是什么？</li>
+<li>主要解决什么问题？<br>
+‌      </br></br></br></li>
+</ul>
+</li>
+<li>
+<p><strong>应用场景</strong></p>
+<ul>
+<li>都应用在什么场景下？<br>
+‌        </br></br></br></li>
+</ul>
+</li>
+<li>
+<p><strong>特点与优缺点</strong></p>
+<ul>
+<li>有什么特点？<br>
+‌      </br></br></br></li>
+</ul>
+</li>
+<li>
+<p><strong>版本差异</strong></p>
+<ul>
+<li>不同的版本之间，有什么区别？</li>
+<li>新增了什么功能？</li>
+</ul>
+</li>
+</ul>
+<p></br></br></br></br></br></p>
+<h1 id="协议架构">协议架构</h1>
+<hr>
+<ul>
+<li>
+<p><strong>系统架构</strong><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261015114625621.png" alt="745"><br>
+一个典型的 AXI 总线网络可以由多个 Master 、Slave 设备通过 Interconnect 进行连接；亦或者是模块之间直接使用 AXI 总线进行连接<br>
+</br></br></br></br></br></p>
+</li>
+<li>
+<p><strong>传输结构</strong><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20260905193326605.png" alt="601"><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20260905193440654.png" alt="608"><br>
+如上图所示，为 AXI 协议的接口架构，总共有 5 个通道，分别是：</p>
+<ul>
+<li>写地址通道</li>
+<li>写数据通道</li>
+<li>写响应通道</li>
+<li>读地址通道</li>
+<li>读数据通道</li>
+</ul>
+<p>地址通道是用来告知 Slave 端本次传输的控制信息，而数据通道则是 Master 端和 Slave 端之间的数据交互</p>
+<ul>
+<li>写数据通道用来传输数据给 Slave 端，在写事务中，Slave 用写响应通道来告知 Master 端本次传输的接收情况</li>
+<li>读数据通道则是Slave 把数据以及接收情况告知给 Master 端<br>
+</br></br></br></br></br></br></br></li>
+</ul>
+</li>
+</ul>
+<h1 id="信号定义">信号定义</h1>
+<hr>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Direction</th>
+<th>Width</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><font color = green><strong>// 写地址通道</strong></font></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>awaddr</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>ADDR_WIDTH</td>
+<td>写请求地址</td>
+</tr>
+<tr>
+<td>awlen</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>8</td>
+<td>写请求突发长度</td>
+</tr>
+<tr>
+<td>awsize</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>3</td>
+<td>写请求突发大小</td>
+</tr>
+<tr>
+<td>awburst</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>2</td>
+<td>写请求突发类型</td>
+</tr>
+<tr>
+<td>awvalid</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>写请求有效</td>
+</tr>
+<tr>
+<td>awready</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>1</td>
+<td>写请求就绪</td>
+</tr>
+<tr>
+<td>awid（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>ID_WIDTH</td>
+<td>写请求ID</td>
+</tr>
+<tr>
+<td>awlock（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>写请求独占访问指示</td>
+</tr>
+<tr>
+<td>awcache（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>4</td>
+<td>写请求存储属性</td>
+</tr>
+<tr>
+<td>awprot（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>3</td>
+<td>写请求保护属性</td>
+</tr>
+<tr>
+<td>awqos（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>4</td>
+<td>写请求QoS标识符</td>
+</tr>
+<tr>
+<td>awregion（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>4</td>
+<td>写请求区域标识符</td>
+</tr>
+<tr>
+<td>awuser（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>USER_WIDTH</td>
+<td>写请求用户自定义扩展信号</td>
+</tr>
+<tr>
+<td><font color = green><strong>// 写数据通道</strong></font></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>wdata</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>DATA_WIDTH</td>
+<td>写数据</td>
+</tr>
+<tr>
+<td>wstrb</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>DATA_WIDTH / 8</td>
+<td>写数据选通</td>
+</tr>
+<tr>
+<td>wlast</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>写数据结束</td>
+</tr>
+<tr>
+<td>wvalid</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>写数据有效</td>
+</tr>
+<tr>
+<td>wready</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>1</td>
+<td>写数据就绪</td>
+</tr>
+<tr>
+<td>wuser（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>USER_WIDTH</td>
+<td>写数据用户自定义信号</td>
+</tr>
+<tr>
+<td><font color = green><strong>// 写响应通道</strong></font></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>bresp</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>2</td>
+<td>写响应</td>
+</tr>
+<tr>
+<td>bvalid</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>1</td>
+<td>写响应有效</td>
+</tr>
+<tr>
+<td>bready</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>写响应就绪</td>
+</tr>
+<tr>
+<td>bid（不常用）</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>ID_WIDTH</td>
+<td>写响应ID</td>
+</tr>
+<tr>
+<td>buser（不常用）</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>USER_WIDTH</td>
+<td>写响应用户自定义信号</td>
+</tr>
+<tr>
+<td><font color = green><strong>// 读地址通道</strong></font></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>araddr</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>ADDR_WIDTH</td>
+<td>读请求地址</td>
+</tr>
+<tr>
+<td>arlen</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>8</td>
+<td>读请求突发长度</td>
+</tr>
+<tr>
+<td>arsize</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>3</td>
+<td>读请求突发大小</td>
+</tr>
+<tr>
+<td>arburst</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>2</td>
+<td>读请求突发类型</td>
+</tr>
+<tr>
+<td>arvalid</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>读请求有效</td>
+</tr>
+<tr>
+<td>arready</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>1</td>
+<td>读请求就绪</td>
+</tr>
+<tr>
+<td>arid（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>ID_WIDTH</td>
+<td>读请求传输标识符</td>
+</tr>
+<tr>
+<td>arlock（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>读请求独占访问指示</td>
+</tr>
+<tr>
+<td>arcache（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>4</td>
+<td>读请求存储属性</td>
+</tr>
+<tr>
+<td>arprot（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>3</td>
+<td>读请求保护属性</td>
+</tr>
+<tr>
+<td>arqos（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>4</td>
+<td>读请求QoS标识符</td>
+</tr>
+<tr>
+<td>arregion（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>4</td>
+<td>读请求ID</td>
+</tr>
+<tr>
+<td>aruser（不常用）</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>USER_WIDTH</td>
+<td>读请求用户自定义信号</td>
+</tr>
+<tr>
+<td><font color = green><strong>// 读数据通道</strong></font></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rdata</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>DATA_WIDTH</td>
+<td>读数据</td>
+</tr>
+<tr>
+<td>rresp</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>2</td>
+<td>读数据响应</td>
+</tr>
+<tr>
+<td>rlast</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>1</td>
+<td>读数据结束</td>
+</tr>
+<tr>
+<td>rvalid</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>1</td>
+<td>读数据有效</td>
+</tr>
+<tr>
+<td>rready</td>
+<td><font color = red>M</font> -&gt; <font color = blue>S</font></td>
+<td>1</td>
+<td>读数据就绪</td>
+</tr>
+<tr>
+<td>rid（不常用）</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>ID_WIDTH</td>
+<td>读数据ID</td>
+</tr>
+<tr>
+<td>ruser（不常用）</td>
+<td><font color = blue>S</font> -&gt; <font color = red>M</font></td>
+<td>USER_WIDTH</td>
+<td>读数据用户自定义信号</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Valid-Ready">Valid &amp; Ready</h2>
+<p>所有通道都使用 Valid 和 Ready 信号来将 Master 、Slave 端握手传输数据、地址以及控制信息等；数据的传输只发生在两个信号都为高电平时<br>
+以下为 AXI 协议中的 2 种握手方式</p>
+<ol>
+<li>
+<p><strong>Valid 在 Ready 之前拉高</strong><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261109114340207.png" alt="500"><br>
+源端在 T1 时刻已经把需要传输的数据准备好了，而目的端由于其他原因导致只能在 T2 时刻才可以接收数据<br>
+那么这时候源端就==<strong>需要数据一直保持不变直至目的端接收完数据</strong>==才可以发生变化</p>
+<blockquote>
+<p><mark>🔴<strong>Valid 的拉高不能依赖于 Ready</strong></mark>，在设计中，源端的 Valid 和其他传输的数据不能等 Ready 有效时才输出，而是先输出直到目的端接收到数据后才能发生变化</p>
+<p><mark>🔴<strong>但允许目的端的 Ready 依赖 Valid</strong></mark>，目的端 Ready 的产生逻辑可以在收到 Valid 之后且内部逻辑是空闲的，这时候才拉高 Ready 信号</p>
+</blockquote>
+</li>
+<li>
+<p><strong>Valid 在 Ready 之后拉高</strong><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261109114408968.png" alt="500"></p>
+<p>目的端在 T1 时刻就准备好接收数据了，但是源端在 T2 时刻才把数据发送出去<br>
+还有一种是 Valid 和 Ready 信号都刚好在同一时刻拉高</br></br><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261109114439046.png" alt="500"><br>
+</br></br></br></br></br></p>
+</li>
+</ol>
+<h2 id="Burst-Length">Burst Length</h2>
+<p>Length 表示的是在==<strong>传输事务中（Transaction）中数据传输（Each Transfer）的次数</strong><mark>，即一次事务中数据传输的数量，</mark><strong>传输总数 = AxLEN + 1</strong>==<br>
+以下为 AXI 传输长度的规则要求：</p>
+<ul>
+<li>对于 Fixed 突发类型，Length 最大支持到 16</li>
+<li>对于 Incr 突发类型，Length 支持 1 ~ 256，而 AXI3 协议仅支持 1 ~ 16</li>
+<li>对于 Wrap 突发类型，Length 必须是 2/4/8/16</li>
+<li><mark>🔴传输事务禁止超过 4KB 地址边界（尚不理解）</mark></li>
+<li>不允许提前终止传输事务</li>
+</ul>
+<blockquote>
+<p>需要注意的是，如果使用的 ip 对 Max_Transaction_Bytes 有限制，则需要根据 AXI 总线的数据位宽计算，单个事务允许的最大 Burst Length</p>
+<p>举例：<br>
+如果 IP 限制 Max_Transaction_Bytes 为 4KB ，AXI 总线位宽是 256bit（32B） ，在每个 Beat 均传输完整数据的情况下<br>
+最大传输总数 Burst Length = 4KB / 32B = 128</p>
+</blockquote>
+<p></br></br></br></br></br></p>
+<h2 id="Burst-Size">Burst Size</h2>
+<p>Size 表示的是==<strong>每次数据传输（ Each Transfer ）的最大字节数</strong>==</p>
+<ul>
+<li>对于读事务来说，Size 表示的是每次读数据必须有效的字节数；</li>
+<li>对于写事务来说，Size 表示的是写数据中有多少个字节被允许使用，而 write strobes 表示的是具体哪些字节是有效的<br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261109114658219.png" alt="484"> </br></br></br></br></br></li>
+</ul>
+<h2 id="Burst-Type">Burst Type</h2>
+<p>Burst  表示的是==<strong>事务传输中（Transaction）地址的递增情况</strong>==，下图为 Burst 的 3 种编码类型<br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261109114817003.png" alt="561"></p>
+<ul>
+<li>
+<p><strong>Fixed</strong><br>
+这种突发类型是用来访问同一个位置的，比如清空 FIFO</p>
+<ul>
+<li>每次突发传输时都是访问的同一个地址（如果 Length 大于 1 的话）</li>
+<li>每次突发传输时有效的字节数都是一样的；只会存在传输时 WSTRB 选通的字节不同</li>
+<li>突发长度支持范围是 1 ~ 16</br></br></li>
+</ul>
+</li>
+<li>
+<p><strong>Incr</strong><br>
+这种突发类型每次传输时地址都会往上递增。而每次递增的单位取决于该事务的突发大小</p>
+<blockquote>
+<p>举例：</p>
+<p>假设 AXI 总线的数据位宽为 256bit（32B），在一次 Burst Type = Incr 的事务中（Transaction），定义了 Burst Size = 3’h1 ， Burst Length = 8’h7 ，Burst Address = 32’h0<br>
+那么 AxADDR 的地址将从 32’h0 开始递增，每次的增量为 32’h2 ，直至递增到 32’he</p>
+</blockquote>
+</li>
+<li>
+<p><strong>Wrap</strong><br>
+这个突发类型跟 Incr 很像，区别是： “如果地址递增到边界上限，则地址不会向上递增了，而是环回到地址的边界下限重新进行递增”<br>
+<mark>🔴其余描述：略（暂时没理解应用场景）</mark></p>
+</li>
+</ul>
+<p></br></br></br></br></br></p>
+<h2 id="Write-Strobes">Write Strobes</h2>
+<p>WSTRB 表示==<strong>写数据通道中 WDATA 的哪个字节通道是有效的</strong>==<br>
+每个 bit 都代表着 WDATA 的每个字节，对应关系为：WSTRB[n] 表示 WDATA[n*8 +:8] 字段的数据有效</p>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261110100635528.png" alt="800"></p>
+<p></br></br></br></br></br></p>
+<h2 id="Response">Response</h2>
+<p>同样，Response 也存在于读写事务中，用于告知源端当前事务的传输结果<br>
+下图只截取了部分含义<br>
+主要是其余编码是后面新增的，应用在其他场景中，所以这里暂时不作考虑</p>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261109162020803.png" alt="589"></p>
+<ul>
+<li><strong>OKAY</strong><br>
+正常访问成功，数据有效；若是独占访问，则表示事务访问失败</li>
+<li><strong>EXOKAY</strong><br>
+独占访问成功，表示独占访问的读/写已经完成</li>
+<li><strong>SLVERR</strong><br>
+Slave error，表示能成功访问 Slave ，但 Slave 希望返回错误情况给 master</li>
+<li><strong>DECERR</strong><br>
+Decode error，通常由互联组件生成，表示传输的地址中没有 Slave 端<br>
+</br></br></br></br></br></li>
+</ul>
+<h2 id="ID">ID</h2>
+<p>ID 在 AXI 协议中是==<strong>为了标识某些需要按序返回的事务</strong>==，除了写通道外，每个通道都有 ID（写通道 ID 在 AXI4 中被移除，主要原因是设计开销太大），应用场景可见<a href="##%E5%85%B6%E4%BB%96%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7">其他传输特性</a></p>
+<p>ID 在 AXI 总线传输时有以下要求：</p>
+<ul>
+<li>对于同一个 ID 的事务来说，需要数据必须按序返回</li>
+<li>不同 ID 之间的事务可以 Out of Order（乱序）返回
+<blockquote>
+<p>比如 Master 端发起了 2 个不同的 ID 事务，在 A 事务返回的期间如果总线空闲，则可以穿插 B 事务返回的数据</p>
+<p>注意：不论是 A 事务还是 B 事务，其事务返回的顺序必须按序</p>
+</blockquote>
+</li>
+</ul>
+<p></br></br></br></br></br></p>
+<h1 id="传输机制">传输机制</h1>
+<hr>
+<h2 id="基本传输流程">基本传输流程</h2>
+<ul>
+<li>
+<p><strong>写操作时序</strong><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261110100313585.png" alt="800"></p>
+<p>如上图所示为 AXI-Full 协议中最基本的写操作时序图</p>
+<ul>
+<li>在 T2 时刻，Master 端下发写命令，目的是往 32’h0 ~ 32’h7 地址里面写入 8’h0~7，但此时 awready 处于低电平，表示 Slave 端尚未准备好接收写命令，因此需要 Master 端的命令保持不变</li>
+<li>在 T3 时刻，awready 变回高电平，并且 awvalid 也为高电平，此时 Slave 端成功接收写命令</li>
+<li>在 T4 时刻，Master 端开始连续发送写数据</li>
+<li>在 T10 时刻，wready 处于低电平，表示 Slave 端暂时无法接收数据，因此需要 Master 端保持数据不变</li>
+<li>在 T11 时刻，wready 变回高电平，Slave 端继续接收数据</li>
+<li>在 T12 时刻，wlast 为高电平，表示当前发送的数据为最后一个数据</li>
+<li>在 T13 时刻，Slave 端返回 OKAY 给 Master 端，表示写操作已经完成<br>
+</br></br></br></li>
+</ul>
+</li>
+<li>
+<p><strong>读操作时序</strong><br>
+<img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261110100506426.png" alt="800"></p>
+<p>如上图所示为 AXI-Full 协议中最基本的读操作时序图</p>
+<ul>
+<li>在 T2 时刻，Master 端下发写命令，目的是读取 32’h0 ~ 32’h7 地址里面的数据内容，但此时 arready 处于低电平，表示 Slave 端尚未准备好接收写命令，因此需要 Master 端的命令保持不变</li>
+<li>在 T3 时刻，arready 变回高电平，并且 arvalid 也为高电平，此时 Slave 端成功接收读命令</li>
+<li>在 T4 时刻，Slave 端开始连续发送写数据，并且每一拍数据的 arresp 都是表示 OKAY</li>
+<li>在 T10 时刻，rready 处于低电平，表示 Master 端暂时无法接收数据，因此需要 Slave 端保持数据不变</li>
+<li>在 T11 时刻，rready 变回高电平，Master 端继续接收数据</li>
+<li>在 T12 时刻，rlast 为高电平，表示当前发送的数据为最后一个数据并且读操作已经完成<br>
+</br></br></br></br></br></li>
+</ul>
+</li>
+</ul>
+<h2 id="其他传输特性">其他传输特性</h2>
+<h3 id="窄传输">窄传输</h3>
+<p>窄传输（Narrow Transfers），简单来说就是==<strong>要传输的数据位宽比总线位宽小，需要根据地址和控制信息去决定传输的字节通道</strong>==<br>
+- 当突发类型是 Incr 、Wrap 时，每次传输必须使用不同的字节通道<br>
+- 当突发类型是 Fixed 时，每次传输可以使用相同的字节通道</p>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261110151405599.png" alt="479"></p>
+<blockquote>
+<p>这里容易与 Unaligned Transfer 混淆</p>
+<ul>
+<li>窄传输主要关注的是 “数据位宽比总线位宽小，所以需要通过 WSTRB 去使对应的数据有效”</li>
+<li>非对齐传输主要关注的是 “地址的起始位置在哪，数据应该与之对应”</li>
+</ul>
+</blockquote>
+<p></br></br></br></p>
+<h3 id="字节不变性">字节不变性</h3>
+<p>字节不变性（Byte Invariance）<br>
+<mark>🔴暂时没研究</mark><br>
+</br></br></br></p>
+<h3 id="非对齐传输">非对齐传输</h3>
+<p>非对齐传输（Unaligned Transfers），简单来说就是 <mark><strong>Master 端可以不按照常规的数据位宽对齐地址的要求，随意访问任意地址</strong></mark></p>
+<p>通常来说，访问的 AxADDR 应该与 AxSIZE 对齐，也就是 AxADDR 的地址增量应该是 AxSIZE。比如：32bit 位宽的数据传输，地址增量为 0x4，理应 AxADDR[1:0] 应该为 0 ，如果低 2bit 的值不为 0 ，则是非对齐访问；但 AXI 协议允许非对齐传输，则 Master 端可以通过以下 2 种方式进行非对齐传输：</p>
+<ul>
+<li>通过地址的低位来表达非对齐地址（即直接访问具体的地址）</li>
+<li>使用对齐地址，但通过 WSTRB 去表示非对齐数据的位置（通过数据选通的方式告知其起始位置）</li>
+</ul>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261110114142752.png" alt="1066"></p>
+<p>而 Slave 端不能直接依赖 WDATA 去获取数据，而是结合 AWSIZE、AWADDR、AWLEN、WSTRB这些信息一起判断哪些有效的字节数据才是真正传输的数据</p>
+<p></br></br></br></br></br></br></br></p>
+<h3 id="Outstanding">Outstanding</h3>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261111110919044.png" alt="800"><br>
+Outstanding  简单来说就是==<strong>允许请求像流水线一样，在数据未返回之前可以发起下一次请求</strong>==。但并不意味着 Master 端可以直接把总线当作 Stream 流去使用，而是由 Outstanding Number 决定该总线上最大能有多少个请求<br>
+</br></br></br></p>
+<h3 id="乱序">乱序</h3>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261112100620460.png" alt="800"><br>
+Out of Order 是==<strong>利用总线的 ID 去给不同的事务打上标识符，让总线可以根据 ID 去乱序处理不同的事务。</strong>==</p>
+<p>换句话说，不同的事务可能需要花费不同的时间，有些事务处理得很快、有些则很慢，他们之间是没有依赖或顺序关系的（相互独立），因此可以先响应已经处理好的事务，这样就不会出现因为上一个事务还没响应，导致需要一直等待这种情况出现，大大节省响应时间</p>
+<blockquote>
+<p>A 事务的返回时间为 5 cycle<br>
+B 事务的返回时间为 1 cycle<br>
+C 事务的返回时间为 2 cycle</p>
+</blockquote>
+<p></br></br></br></p>
+<h3 id="交织读写">交织读写</h3>
+<p><img src="/Image/AMBA%E6%80%BB%E7%BA%BF%E2%80%94AXI-Full/file-20261112094010365.png" alt="800"><br>
+Interleaving，可以理解为更细粒度的乱序（Out of Order），是为了减少读写数据通道中没有利用到的空拍，最大利用通道带宽</p>
+<p><mark>🔴但在 AXI4 之后的协议中，只有读通道支持数据交织，写通道不支持</mark>，如果写通道也要实现数据交织，则需要更大的面积以及更复杂的控制逻辑，因此在 AXI4 时已经移除了写交织，并且写通道的 WID 也一并被移除<br>
+</br></br></br></br></br></br></br></p>
+<h1 id="参考文献">参考文献</h1>
+<hr>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://support.arm.com/documentation/ihi0022/latest">AMBA AXI Protocol Specification</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1663245806869291008">AMBA学习</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/145936888">深入 AXI4 总线（O）专栏目录与资料集合</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://yoo-0213.github.io">winki</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yoo-0213.github.io/FPGA/amba%E6%80%BB%E7%BA%BF-%E2%80%94%E2%80%94-axi-full/">https://yoo-0213.github.io/FPGA/amba总线-——-axi-full/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://yoo-0213.github.io" target="_blank">winki's Blog</a>！</span></div></div><div class="tag_share"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/Picture/upload/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">winki</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yoo-0213"><i class="fab fa-github"></i><span>Follow</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">协议架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%AE%9A%E4%B9%89"><span class="toc-number">3.</span> <span class="toc-text">信号定义</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Valid-Ready"><span class="toc-number">3.1.</span> <span class="toc-text">Valid &amp; Ready</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Burst-Length"><span class="toc-number">3.2.</span> <span class="toc-text">Burst Length</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Burst-Size"><span class="toc-number">3.3.</span> <span class="toc-text">Burst Size</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Burst-Type"><span class="toc-number">3.4.</span> <span class="toc-text">Burst Type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Write-Strobes"><span class="toc-number">3.5.</span> <span class="toc-text">Write Strobes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Response"><span class="toc-number">3.6.</span> <span class="toc-text">Response</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ID"><span class="toc-number">3.7.</span> <span class="toc-text">ID</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E6%9C%BA%E5%88%B6"><span class="toc-number">4.</span> <span class="toc-text">传输机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BC%A0%E8%BE%93%E6%B5%81%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">基本传输流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7"><span class="toc-number">4.2.</span> <span class="toc-text">其他传输特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%84%E4%BC%A0%E8%BE%93"><span class="toc-number">4.2.1.</span> <span class="toc-text">窄传输</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E8%8A%82%E4%B8%8D%E5%8F%98%E6%80%A7"><span class="toc-number">4.2.2.</span> <span class="toc-text">字节不变性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%AF%B9%E9%BD%90%E4%BC%A0%E8%BE%93"><span class="toc-number">4.2.3.</span> <span class="toc-text">非对齐传输</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Outstanding"><span class="toc-number">4.2.4.</span> <span class="toc-text">Outstanding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%B1%E5%BA%8F"><span class="toc-number">4.2.5.</span> <span class="toc-text">乱序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E7%BB%87%E8%AF%BB%E5%86%99"><span class="toc-number">4.2.6.</span> <span class="toc-text">交织读写</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button><button id="go-down" type="button" title="直达底部"><i class="fas fa-arrow-down"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="/css/hexo_resize_image.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
